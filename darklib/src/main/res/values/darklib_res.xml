@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Defined base ratio size custom attrs -->
+    <declare-styleable name="ViewSizeCalculate">
+        <!-- Sets view ratio size of width -->
+        <attr name="widthRatio" format="float"/>
+        <!-- Sets view ratio size of height -->
+        <attr name="heightRatio" format="float"/>
+        <!-- Sets view ratio size of square -->
+        <attr name="layoutSquare" format="boolean"/>
+        <!-- Sets view ratio size of aspect -->
+        <attr name="layoutAspectRatio" format="float"/>
+        <!-- Sets view ratio size of mode -->
+        <attr name="datumRatio">
+            <enum name="datumAuto" value="0"/>
+            <enum name="datumWidth" value="1"/>
+            <enum name="datumHeight" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <!-- RatioFrameLayout -->
+    <declare-styleable name="RatioFrameLayout" parent="ViewSizeCalculate">
+        <attr name="widthRatio"/>
+        <attr name="heightRatio"/>
+        <attr name="datumRatio"/>
+        <attr name="layoutSquare"/>
+        <attr name="layoutAspectRatio"/>
+    </declare-styleable>
+</resources>
