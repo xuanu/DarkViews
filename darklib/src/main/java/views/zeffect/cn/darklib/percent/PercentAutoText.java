@@ -4,13 +4,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
-import android.os.Looper;
-import android.os.MessageQueue;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.EventLog;
-import android.util.Log;
 import android.util.TypedValue;
 
 import views.zeffect.cn.darklib.DarkText;
@@ -86,13 +82,18 @@ public class PercentAutoText extends DarkText {
                 break;
         }
         setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
-        setTextSize(originalTextSize);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w != oldw || h != oldh) setTextSize(originalTextSize);
+    }
+
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        setTextSize(originalTextSize);
     }
 
     @Override
@@ -108,14 +109,12 @@ public class PercentAutoText extends DarkText {
 
 
     private float adjustSize(float size) {
-        Log.e("zeffect", "adjust size:" + System.currentTimeMillis());
         float defaultSize = 20f;
         if (size <= 0) return defaultSize;
         size = (int) (size * getDefaultPercent(this.getContext()));
         if (TextUtils.isEmpty(autoTractics)) return size;
         if (autoTractics.equals(TRACTICS_WIDTH)) {
             if (canAdjustWidth) {
-                Log.e("zeffect", "width:" + getWidth());
                 int avaiWidth = getWidth() - this.getPaddingLeft() - this.getPaddingRight() - 10;
                 if (avaiWidth <= 0) {
                     return defaultSize;
@@ -124,7 +123,6 @@ public class PercentAutoText extends DarkText {
                 textPaintClone.setTextSize(size);
                 float trySize = size;
                 while (textPaintClone.measureText(getText().toString()) > avaiWidth) {
-                    Log.e("zeffect", "in width while");
                     trySize--;
                     if (trySize < 0) break;
                     textPaintClone.setTextSize(trySize);
@@ -133,7 +131,6 @@ public class PercentAutoText extends DarkText {
             }
         } else if (autoTractics.equals(TRACTICS_HEIGHT)) {
             if (canAdjustHeight) {
-                Log.e("zeffect", "height:" + getHeight());
                 int avaiHeight = getHeight() - getPaddingTop() - getPaddingBottom() - 10;
                 if (avaiHeight <= 0) return defaultSize;
                 Paint textPaint = new Paint();
@@ -141,7 +138,6 @@ public class PercentAutoText extends DarkText {
                 Paint.FontMetrics fm = textPaint.getFontMetrics();
                 float trySize = size;
                 while ((int) Math.ceil(fm.descent - fm.ascent) > avaiHeight) {
-                    Log.e("zeffect", "in height while");
                     trySize--;
                     if (trySize < 0) break;
                     textPaint.setTextSize(trySize);

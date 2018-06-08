@@ -48,6 +48,20 @@ public class PercentText extends DarkText {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w != oldw || h != oldh) {
+            setTextSize(originalTextSize);
+        }
+    }
+
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        setTextSize(originalTextSize);
+    }
+
+    @Override
     public void setTextSize(int unit, float size) {
         float defaultSize = size;
         size = (int) (defaultSize * getDefaultPercent(this.getContext()));
