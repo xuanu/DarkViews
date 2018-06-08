@@ -1,9 +1,10 @@
 # DarkViews
 default pressed view
 
-> 带默认按下效果的控件
-> [添加依赖方法](https://jitpack.io/#xuanu/DarkViews/v1.0)
-> 拥有控件
+> 带默认按下效果的控件  
+[![](https://jitpack.io/v/xuanu/DarkViews.svg)](https://jitpack.io/#xuanu/DarkViews)
+> [添加依赖方法](https://jitpack.io/#xuanu/DarkViews/v1.0)  
+> 拥有控件  
 ```
 DarkButton extends Button
 DarkImage extends ImageView
