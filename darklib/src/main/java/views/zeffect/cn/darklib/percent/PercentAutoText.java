@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 
 import views.zeffect.cn.darklib.DarkText;
@@ -35,12 +36,12 @@ public class PercentAutoText extends DarkText {
     }
 
     private void init(AttributeSet attributeSet) {
-        originalTextSize = getTextSize();
         if (attributeSet != null) {
             if (attributeSet != null) {
                 TypedArray typedArray = this.getContext().obtainStyledAttributes(attributeSet, R.styleable.Dark);
                 baseScreenHeight = typedArray.getInt(R.styleable.Dark_baseScreenHeight, baseScreenHeight);
                 autoTractics = typedArray.getString(R.styleable.Dark_autoTactics);
+                originalTextSize = typedArray.getInt(R.styleable.Dark_textSize, 20);
                 typedArray.recycle();
             }
         }
@@ -102,6 +103,7 @@ public class PercentAutoText extends DarkText {
         super.setTextSize(unit, size);
     }
 
+
     @Override
     public void setTextSize(float size) {
         setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
@@ -141,7 +143,7 @@ public class PercentAutoText extends DarkText {
                     trySize--;
                     if (trySize < 0) break;
                     textPaint.setTextSize(trySize);
-                    fm=textPaint.getFontMetrics();
+                    fm = textPaint.getFontMetrics();
                 }
                 return trySize;
             }
