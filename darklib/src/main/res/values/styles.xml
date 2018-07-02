@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Dark">
-        <attr name="autoTactics" format="enum">
+        <attr name="wOrh" format="enum">
             <enum name="width" value="1"></enum>
             <enum name="height" value="2"></enum>
         </attr>
-        <attr name="baseScreenHeight" format="integer"/>
+        <attr name="screenHeight" format="integer"/>
         <attr name="textSize" format="integer"></attr>
     </declare-styleable>
 </resources>

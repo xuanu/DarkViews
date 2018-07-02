@@ -39,7 +39,7 @@ public class PercentText extends DarkText {
         if (attributeSet != null) {
             if (attributeSet != null) {
                 TypedArray typedArray = this.getContext().obtainStyledAttributes(attributeSet, R.styleable.Dark);
-                baseScreenHeight = typedArray.getInt(R.styleable.Dark_baseScreenHeight, baseScreenHeight);
+                baseScreenHeight = typedArray.getInt(R.styleable.Dark_screenHeight, baseScreenHeight);
                 originalTextSize = typedArray.getInt(R.styleable.Dark_textSize, 20);
                 typedArray.recycle();
             }

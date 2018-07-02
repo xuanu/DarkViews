@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 
 import views.zeffect.cn.darklib.DarkText;
@@ -39,8 +38,8 @@ public class PercentAutoText extends DarkText {
         if (attributeSet != null) {
             if (attributeSet != null) {
                 TypedArray typedArray = this.getContext().obtainStyledAttributes(attributeSet, R.styleable.Dark);
-                baseScreenHeight = typedArray.getInt(R.styleable.Dark_baseScreenHeight, baseScreenHeight);
-                autoTractics = typedArray.getString(R.styleable.Dark_autoTactics);
+                baseScreenHeight = typedArray.getInt(R.styleable.Dark_screenHeight, baseScreenHeight);
+                autoTractics = typedArray.getString(R.styleable.Dark_wOrh);
                 originalTextSize = typedArray.getInt(R.styleable.Dark_textSize, 20);
                 typedArray.recycle();
             }
@@ -50,40 +49,54 @@ public class PercentAutoText extends DarkText {
         setSingleLine(true);
     }
 
-    private boolean canAdjustWidth = true;
-    private boolean canAdjustHeight = true;
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int heightModel = MeasureSpec.getMode(heightMeasureSpec);
-        switch (heightModel) {
-            case MeasureSpec.AT_MOST:
-                canAdjustHeight = true;
-                break;
-            case MeasureSpec.EXACTLY:
-                canAdjustHeight = true;
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                canAdjustHeight = false;
-                break;
-        }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        int heightModel = MeasureSpec.getMode(heightMeasureSpec);
+//        boolean unspHeight = false;
+//        switch (heightModel) {
+//            case MeasureSpec.AT_MOST:
+//                canAdjustHeight = true;
+//                break;
+//            case MeasureSpec.EXACTLY:
+//                canAdjustHeight = true;
+//                break;
+//            case MeasureSpec.UNSPECIFIED:
+//                canAdjustHeight = false;
+//                unspHeight = true;
+//                break;
+//        }
+//        boolean unspWidth = false;
+//        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+//        switch (widthMode) {
+//            case MeasureSpec.AT_MOST:
+//                canAdjustWidth = true;
+//                break;
+//            case MeasureSpec.EXACTLY:
+//                canAdjustWidth = true;
+//                break;
+//            case MeasureSpec.UNSPECIFIED:
+//                canAdjustWidth = false;
+//                unspWidth = true;
+//                break;
+//        }
+//        Paint paint = new Paint();
+//        paint.setTextSize(originalTextSize);
+//        int needWidth = (int) paint.measureText(this.getText().toString());//需要这么宽
+//        Paint textPaint = new Paint();
+//        textPaint.setTextSize(originalTextSize);
+//        Paint.FontMetrics fm = textPaint.getFontMetrics();
+//        int needHeight = (int) Math.ceil(fm.descent - fm.ascent);
+//        if (unspHeight && unspWidth) {
+//            setMeasuredDimension(needWidth, needHeight);
+//        } else if (unspHeight) {
+//            setMeasuredDimension(widthMeasureSpec, needHeight);
+//        } else if (unspWidth) {
+//            setMeasuredDimension(needWidth, heightMeasureSpec);
+//        }
+//    }
 
-        //检查能否根据宽高进行调整
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        switch (widthMode) {
-            case MeasureSpec.AT_MOST:
-                canAdjustWidth = true;
-                break;
-            case MeasureSpec.EXACTLY:
-                canAdjustWidth = true;
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                canAdjustWidth = false;
-                break;
-        }
-        setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
-    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -116,37 +129,36 @@ public class PercentAutoText extends DarkText {
         size = (int) (size * getDefaultPercent(this.getContext()));
         if (TextUtils.isEmpty(autoTractics)) return size;
         if (autoTractics.equals(TRACTICS_WIDTH)) {
-            if (canAdjustWidth) {
-                int avaiWidth = getWidth() - this.getPaddingLeft() - this.getPaddingRight() - 10;
-                if (avaiWidth <= 0) {
-                    return defaultSize;
-                }
-                TextPaint textPaintClone = new TextPaint();
-                textPaintClone.setTextSize(size);
-                float trySize = size;
-                while (textPaintClone.measureText(getText().toString()) > avaiWidth) {
-                    trySize--;
-                    if (trySize < 0) break;
-                    textPaintClone.setTextSize(trySize);
-                }
-                return trySize;
+
+            int avaiWidth = getWidth() - this.getPaddingLeft() - this.getPaddingRight() - 10;
+            if (avaiWidth <= 0) {
+                return defaultSize;
             }
+            TextPaint textPaintClone = new TextPaint();
+            textPaintClone.setTextSize(size);
+            float trySize = size;
+            while (textPaintClone.measureText(getText().toString()) > avaiWidth) {
+                trySize--;
+                if (trySize < 0) break;
+                textPaintClone.setTextSize(trySize);
+            }
+            return trySize;
+
         } else if (autoTractics.equals(TRACTICS_HEIGHT)) {
-            if (canAdjustHeight) {
-                int avaiHeight = getHeight() - getPaddingTop() - getPaddingBottom() - 10;
-                if (avaiHeight <= 0) return defaultSize;
-                Paint textPaint = new Paint();
-                textPaint.setTextSize(size);
-                Paint.FontMetrics fm = textPaint.getFontMetrics();
-                float trySize = size;
-                while ((int) Math.ceil(fm.descent - fm.ascent) > avaiHeight) {
-                    trySize--;
-                    if (trySize < 0) break;
-                    textPaint.setTextSize(trySize);
-                    fm = textPaint.getFontMetrics();
-                }
-                return trySize;
+
+            int avaiHeight = getHeight() - getPaddingTop() - getPaddingBottom() - 10;
+            if (avaiHeight <= 0) return defaultSize;
+            Paint textPaint = new Paint();
+            textPaint.setTextSize(size);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float trySize = size;
+            while (Math.ceil(fm.descent - fm.ascent) > avaiHeight) {
+                trySize--;
+                if (trySize < 0) break;
+                textPaint.setTextSize(trySize);
+                fm = textPaint.getFontMetrics();
             }
+            return trySize;
         }
         return size;
     }
